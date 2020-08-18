@@ -75,9 +75,9 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetDetails(string Id)
         {
             //"349f4b8d-db5a-49ed-b1c9-92524b702ad6"
-            Guid g = new Guid(Id);
+            Guid GId = new Guid(Id);
            
-            var result = await _memberService.GetMemberByIDQueryHandler(g);
+            var result = await _memberService.GetMemberByIDQueryHandler(GId);
 
             return Ok(result.Payload);
         }
