@@ -52,8 +52,8 @@ namespace WebApi.Controllers
         public async Task<IActionResult> DeleteTask(string Id)
         {
 
-            Guid g = new Guid(Id);
-            var result = await _tasksService.DeleteTaskQueryHandler(g);
+            Guid GId = new Guid(Id);
+            var result = await _tasksService.DeleteTaskQueryHandler(GId);
 
 
             return Ok(result);
