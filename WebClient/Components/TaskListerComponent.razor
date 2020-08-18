@@ -1,0 +1,79 @@
+
+@namespace FamilyTask.Components
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+<style>
+    .task-wrapper .task-item {
+        background: #FFFFFF;
+        border: 1px solid #C5C9C9;
+        box-sizing: border-box;
+        border-radius: 8px;
+        font-size: 24px;
+        font-family: "Poppins Light";
+    }
+
+    .done-text {
+        text-decoration: line-through;
+    }
+
+    .task-wrapper .avtar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+    }
+
+    @@media(max-width: 1400px) {
+        .task-wrapper .task-item {
+            font-size: 16px;
+        }
+
+        .task-wrapper .avtar {
+            width: 24px;
+            height: 24px;
+        }
+
+        .delete-icon {
+            width: 25px;
+        }
+    }
+
+    @@media(max-width: 767.98px) {
+        .task-wrapper .avtar {
+            width: 16px;
+            height: 16px;
+        }
+    }
+</style>
+
+<div class="task-wrapper">
+    @foreach (var item in Tasks)
+    {
+<div class="task-item p-3 my-3 row m-0">
+    <div class="col-10 p-0">
+        <Check TValue="bool" Checked="@item.IsComplete" CheckedChanged="@(val => item.IsComplete = val)">
+            <span class="@(item.IsComplete ? "done-text" : "")">@item.Subject</span>
+        </Check>
+    </div>
+    <div class="col-2 p-0 d-flex justify-content-end align-items-center">
+        @if (item.AssignedToId != null)
+        {
+<div class="avtar mr-1" style="background-color: @item.Members.avatar;"></div>}
+        <img class="delete-icon" @onclick="@(e => onDeleteTask(item))" src="/assets/images/delete-icon.svg" />
+    </div>
+</div>}
+</div>
+
+@code  { //[Parameter] public TaskModel[] Tasks { get; set; }
+    [Parameter] public MemberTasks[] Tasks { get; set; }
+
+    private async void onDeleteTask(object e)
+    {
+
+        var id = (Guid)e.GetType().GetProperty("Id").GetValue(e);
+
+
+        //var addItem = new dynamic { Name = e, IsComplete = false };
+        var result = await Http.GetFromJsonAsync<DeleteMember>("https://localhost:5001/api/Tasks/DeleteTask?Id=" + id.ToString());
+        this.StateHasChanged();
+        NavigationManager.NavigateTo("manage-tasks");
+    } }
